@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'presentation/navigation/app_router.dart';
+import 'presentation/theme/theme.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const PlantCareApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class PlantCareApp extends StatelessWidget {
+  const PlantCareApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'PlantCare',
+      theme: AppTheme.lightTheme, // ✅ Aplicamos el theme global
+      routerConfig: appRouter,
     );
   }
 }
