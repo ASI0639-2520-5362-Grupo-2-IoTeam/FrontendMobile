@@ -8,12 +8,18 @@ import '../views/myplants_view.dart';
 import '../views/plant_detail_view.dart';
 import '../views/history_view.dart';
 import '../views/settings_view.dart';
-import '../views/register_view.dart'; // futura pantalla de registro
-import '../views/search_filter_view.dart'; // futura pantalla de búsqueda y filtros
+import '../views/register_view.dart'; 
+import '../views/search_filter_view.dart'; 
+import 'package:plant_care/presentation/views/splash_view.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/splash',
+      name: 'splash',
+      builder: (context, state) => const SplashView(),
+    ),
     GoRoute(
       path: '/login',
       name: 'login',

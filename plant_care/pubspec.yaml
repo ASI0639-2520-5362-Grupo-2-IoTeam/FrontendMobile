@@ -9,8 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  provider: ^6.1.2
   go_router: ^16.2.4
   google_fonts: ^6.3.2
+  fl_chart: ^0.65.0
 
 dev_dependencies:
   flutter_test:
@@ -19,3 +21,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/pc_logo.png
+    - assets/images/pc_logo_white.png

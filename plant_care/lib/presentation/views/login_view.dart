@@ -18,8 +18,9 @@ class LoginView extends StatelessWidget {
               SizedBox(height: size.height * 0.05),
 
               // Logo + título
-              const Icon(Icons.eco, size: 80, color: Colors.green),
-              const SizedBox(height: 16),
+              Image.asset('assets/images/pc_logo.png',height: 120,
+              width: 120,),
+              const SizedBox(height: 26),
               Text(
                 "PLANTCARE",
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(

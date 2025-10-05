@@ -18,7 +18,8 @@ class RegisterView extends StatelessWidget {
               SizedBox(height: size.height * 0.05),
 
               // Logo + título
-              const Icon(Icons.eco, size: 80, color: Colors.green),
+              Image.asset('assets/images/pc_logo.png',height: 120,
+              width: 120,),
               const SizedBox(height: 16),
               Text(
                 "PLANTCARE",
