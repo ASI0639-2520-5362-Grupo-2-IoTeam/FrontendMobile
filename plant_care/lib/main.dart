@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:plant_care/presentation/navigation/app_router.dart';
 import 'package:provider/provider.dart';
+import 'iam/data/datasources/auth_api_service.dart';
+import 'iam/data/repositories/auth_repository_impl.dart';
+import 'iam/domain/usecases/login_usecase.dart';
+import 'iam/domain/usecases/register_usecase.dart';
+import 'iam/presentation/providers/auth_provider.dart';
+import 'plants/presentation/providers/plant_provider.dart';
 import 'presentation/theme/theme.dart';
 import 'presentation/viewmodel/theme_viewmodel.dart';
 
 void main() {
+  final authApiService = AuthApiService();
+  final authRepository = AuthRepositoryImpl(authApiService);
+  final loginUseCase = LoginUseCase(authRepository);
+  final registerUseCase = RegisterUseCase(authRepository);
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeViewModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(
+            loginUseCase: loginUseCase,
+            registerUseCase: registerUseCase,
+          ),
+        ),
+        ChangeNotifierProvider(create: (_) => PlantProvider()),
+      ],
       child: const PlantCareApp(),
     ),
   );
@@ -25,7 +45,7 @@ class PlantCareApp extends StatelessWidget {
 
         return AnimatedTheme(
           data: theme,
-          duration: const Duration(milliseconds: 400), // transición suave
+          duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,

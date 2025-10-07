@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_care/presentation/theme/theme.dart';
-import '../widgets/custom_bottom_navbar.dart';
+import '../../../presentation/widgets/custom_bottom_navbar.dart';
 
 
 class HistoryView extends StatefulWidget {

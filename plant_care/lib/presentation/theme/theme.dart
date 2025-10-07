@@ -125,7 +125,6 @@ class AppTheme {
     colorScheme: const ColorScheme.dark(
       primary: primaryGreen,
       secondary: secondaryGreen,
-      background: darkBackground,
       surface: darkCard,
     ),
     textTheme: GoogleFonts.ralewayTextTheme().copyWith(

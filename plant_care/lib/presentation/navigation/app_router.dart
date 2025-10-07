@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 // Importa las vistas que usaremos
-import '../views/login_view.dart';
-import '../views/dashboard_view.dart';
-import '../views/myplants_view.dart';
-import '../views/plant_detail_view.dart';
-import '../views/history_view.dart';
+import '../../iam/presentation/widgets/login_view.dart';
+import '../../dashboard/presentation/widgets/dashboard_view.dart';
+import '../../plants/presentation/widgets/myplants_view.dart';
+import '../../plant_detail/presentation/widgets/plant_detail_view.dart';
+import '../../history/presentation/widgets/history_view.dart';
 import '../views/settings_view.dart';
-import '../views/register_view.dart'; 
+import '../../iam/presentation/widgets/register_view.dart'; 
 import '../views/search_filter_view.dart'; 
 import 'package:plant_care/presentation/views/splash_view.dart';
 
