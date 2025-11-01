@@ -9,8 +9,15 @@ import 'iam/presentation/providers/auth_provider.dart';
 import 'plants/presentation/providers/plant_provider.dart';
 import 'presentation/theme/theme.dart';
 import 'presentation/viewmodel/theme_viewmodel.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   final authApiService = AuthApiService();
   final authRepository = AuthRepositoryImpl(authApiService);
   final loginUseCase = LoginUseCase(authRepository);
@@ -59,3 +66,5 @@ class PlantCareApp extends StatelessWidget {
     );
   }
 }
+
+

@@ -105,10 +105,30 @@ class _LoginViewState extends State<LoginView> {
                   child: const Text("Sign Up"),
                 ),
               ),
-            ],
+
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: Image.asset('assets/images/google_logo.png', height: 20,
+                  width: 20,),
+                  label: const Text("Continuar con Google"),
+                  onPressed: () async {
+                    try {
+                      await authProvider.signInWithGoogle();
+                      if (context.mounted) context.go("/dashboard");
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Error al iniciar sesión con Google: $e")),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
