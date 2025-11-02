@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_care/iam/domain/usecases/google_signin_usecase.dart';
 import 'package:plant_care/presentation/navigation/app_router.dart';
 import 'package:provider/provider.dart';
 import 'iam/data/datasources/auth_api_service.dart';
@@ -14,15 +15,29 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
+  try {
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint("✅ Firebase inicializado correctamente");
+  } else {
+    debugPrint("⚠️ Firebase ya estaba inicializado, se omitió la reinicialización.");
+  }
+} catch (e) {
+  debugPrint("❌ Error al inicializar Firebase: $e");
+}
+
+  // ==== Inyección manual de dependencias ====
   final authApiService = AuthApiService();
   final authRepository = AuthRepositoryImpl(authApiService);
+
   final loginUseCase = LoginUseCase(authRepository);
   final registerUseCase = RegisterUseCase(authRepository);
+  final googleSignInUseCase = GoogleSignInUseCase(); 
 
+  // ==== Inicializa la app ====
   runApp(
     MultiProvider(
       providers: [
@@ -31,6 +46,7 @@ void main() async {
           create: (_) => AuthProvider(
             loginUseCase: loginUseCase,
             registerUseCase: registerUseCase,
+            googleSignInUseCase: googleSignInUseCase, 
           ),
         ),
         ChangeNotifierProvider(create: (_) => PlantProvider()),
@@ -66,5 +82,3 @@ class PlantCareApp extends StatelessWidget {
     );
   }
 }
-
-

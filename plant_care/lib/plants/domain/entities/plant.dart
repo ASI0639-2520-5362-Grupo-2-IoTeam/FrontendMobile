@@ -1,4 +1,3 @@
-import 'package:uuid/uuid.dart';
 
 import 'plant_status.dart';
 

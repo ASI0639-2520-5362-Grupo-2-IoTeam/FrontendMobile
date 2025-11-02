@@ -1,6 +1,5 @@
 import 'package:plant_care/iam/data/models/user_model.dart';
 
-import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 
 class RegisterUseCase {

@@ -5,11 +5,9 @@ import 'package:plant_care/presentation/theme/theme.dart';
 import 'package:provider/provider.dart';
 import '../../../plant_detail/presentation/widgets/plant_detail_view.dart';
 import '../../../presentation/widgets/custom_bottom_navbar.dart';
-import '../../data/datasources/plant_api_service.dart';
-import '../../data/models/plant_model.dart';
 import '../providers/plant_provider.dart';
 
-class MyPlantsView extends StatefulWidget {
+/*class MyPlantsView extends StatefulWidget {
   const MyPlantsView({super.key});
 
   @override
@@ -231,4 +229,4 @@ class _MyPlantsViewState extends State<MyPlantsView> {
       bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
     );
   }
-}
+}*/

@@ -1,4 +1,3 @@
-import 'package:plant_care/plants/data/models/plant_model.dart';
 import 'package:plant_care/plants/domain/entities/plant.dart';
 
 abstract class PlantRepository {

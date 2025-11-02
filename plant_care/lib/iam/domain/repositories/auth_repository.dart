@@ -1,6 +1,5 @@
 import 'package:plant_care/iam/data/models/user_model.dart';
 
-import '../../domain/entities/user.dart';
 
 abstract class AuthRepository {
 

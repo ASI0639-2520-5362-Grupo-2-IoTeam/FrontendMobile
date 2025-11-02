@@ -34,11 +34,11 @@ final GoRouter appRouter = GoRouter(
       name: 'dashboard',
       builder: (context, state) => const DashboardView(),
     ),
-    GoRoute(
+    /*GoRoute(
       path: '/myplants',
       name: 'myplants',
       builder: (context, state) => const MyPlantsView(),
-    ),
+    ),*/
     GoRoute(
       path: '/plant/:id',
       name: 'plantDetail',

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:plant_care/plants/domain/entities/plant_status.dart';
 import 'package:plant_care/plants/presentation/providers/plant_provider.dart';
 
-class AddPlantDialog extends StatefulWidget {
+/*class AddPlantDialog extends StatefulWidget {
   const AddPlantDialog({super.key});
 
   @override
@@ -142,4 +142,4 @@ class _AddPlantDialogState extends State<AddPlantDialog> {
       ),
     );
   }
-}
+}*/
