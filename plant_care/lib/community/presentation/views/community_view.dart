@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../presentation/widgets/custom_bottom_navbar.dart';
 import '../widgets/community_feed_item.dart';
 import '../widgets/expert_item.dart';
 
@@ -9,28 +10,59 @@ class CommunityView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7F2),
+
+      // ============================
+      //         APP BAR
+      // ============================
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F7F2),
         elevation: 0,
+        centerTitle: false,
         title: const Text(
           "Community",
           style: TextStyle(
             color: Color(0xFF2F3E2C),
             fontWeight: FontWeight.bold,
+            fontSize: 22,
           ),
         ),
-        centerTitle: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF8BC34A),
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                // Aquí luego abriremos la pantalla de crear post
+              },
+              child: const Text(
+                "Create Post",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+        ],
       ),
 
+      // ============================
+      //         BODY
+      // ============================
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // -------------------------------------------------
-            // COMMUNITY FEED
-            // -------------------------------------------------
+            // ---------- COMMUNITY FEED ----------
             const Text(
               "Community Feed",
               style: TextStyle(
@@ -39,7 +71,6 @@ class CommunityView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 12),
 
             const CommunityFeedItem(
@@ -62,9 +93,7 @@ class CommunityView extends StatelessWidget {
 
             const SizedBox(height: 28),
 
-            // -------------------------------------------------
-            // PLANT EXPERTS
-            // -------------------------------------------------
+            // ---------- PLANT EXPERTS ----------
             const Text(
               "Plant Experts",
               style: TextStyle(
@@ -86,7 +115,8 @@ class CommunityView extends StatelessWidget {
             const ExpertItem(
               name: "Green Thumb Guru",
               specialty: "Indoor Gardening",
-              avatarUrl: "https://randomuser.me/api/portraits/women/19.jpg",
+              avatarUrl:
+              "https://randomuser.me/api/portraits/women/19.jpg",
               isFollowing: true,
             ),
 
@@ -94,6 +124,11 @@ class CommunityView extends StatelessWidget {
           ],
         ),
       ),
+
+      // ============================
+      //   BOTTOM NAV ALWAYS VISIBLE
+      // ============================
+      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 2),
     );
   }
 }
