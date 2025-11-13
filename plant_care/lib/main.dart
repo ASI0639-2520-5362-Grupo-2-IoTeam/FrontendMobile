@@ -17,17 +17,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-  if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    debugPrint("✅ Firebase inicializado correctamente");
-  } else {
-    debugPrint("⚠️ Firebase ya estaba inicializado, se omitió la reinicialización.");
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      debugPrint("✅ Firebase inicializado correctamente");
+    } else {
+      debugPrint("⚠️ Firebase ya estaba inicializado, se omitió la reinicialización.");
+    }
+  } catch (e) {
+    debugPrint("❌ Error al inicializar Firebase: $e");
   }
-} catch (e) {
-  debugPrint("❌ Error al inicializar Firebase: $e");
-}
 
   // ==== Inyección manual de dependencias ====
   final authApiService = AuthApiService();
@@ -35,7 +35,7 @@ void main() async {
 
   final loginUseCase = LoginUseCase(authRepository);
   final registerUseCase = RegisterUseCase(authRepository);
-  final googleSignInUseCase = GoogleSignInUseCase(); 
+  final googleSignInUseCase = GoogleSignInUseCase();
 
   // ==== Inicializa la app ====
   runApp(
@@ -46,7 +46,7 @@ void main() async {
           create: (_) => AuthProvider(
             loginUseCase: loginUseCase,
             registerUseCase: registerUseCase,
-            googleSignInUseCase: googleSignInUseCase, 
+            googleSignInUseCase: googleSignInUseCase,
           ),
         ),
         ChangeNotifierProvider(create: (_) => PlantProvider()),
@@ -64,7 +64,8 @@ class PlantCareApp extends StatelessWidget {
     return Consumer<ThemeViewModel>(
       builder: (context, themeViewModel, child) {
         final isDark = themeViewModel.isDarkMode;
-        final theme = isDark ? AppTheme.darkTheme : AppTheme.lightTheme;
+        final theme =
+        isDark ? AppTheme.darkTheme : AppTheme.lightTheme;
 
         return AnimatedTheme(
           data: theme,
