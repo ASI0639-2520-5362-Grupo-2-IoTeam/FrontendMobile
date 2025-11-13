@@ -1,16 +1,20 @@
 import 'package:go_router/go_router.dart';
+
+import '../../community/presentation/views/community_screen.dart';
+import '../../community/presentation/views/create_post_view.dart';
 import '../../iam/presentation/widgets/login_view.dart';
 import '../../dashboard/presentation/widgets/dashboard_view.dart';
 import '../../plant_detail/presentation/widgets/plant_detail_view.dart';
 import '../../history/presentation/widgets/history_view.dart';
 import '../views/settings_view.dart';
-import '../../iam/presentation/widgets/register_view.dart'; 
+import '../../iam/presentation/widgets/register_view.dart';
 import '../views/search_filter_view.dart';
 import '../../subscription/presentation/pages/subscription_view.dart';
 import '../../plants/presentation/widgets/myplants_view.dart';
-import '../../community/presentation/views/community_view.dart';
-
 import 'package:plant_care/presentation/views/splash_view.dart';
+
+// 👇 AGREGAR ESTE IMPORT
+import '../../community/presentation/views/comunity_feed_view.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -64,14 +68,20 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const SearchFilterView(),
     ),
     GoRoute(
-      path: '/community',
-      name: 'community',
-      builder: (context, state) => const CommunityView(),
-    ),
-    GoRoute(
       path: '/subscription',
       name: 'subscription',
       builder: (context, state) => const SubscriptionView(),
     ),
+    GoRoute(
+      path: '/community',
+      name: 'community',
+      builder: (context, state) => const CommunityScreen(),
+    ),
+    GoRoute(
+      path: '/create-post',
+      name: 'createPost',
+      builder: (context, state) => const CreatePostView(),
+    ),
+
   ],
 );
