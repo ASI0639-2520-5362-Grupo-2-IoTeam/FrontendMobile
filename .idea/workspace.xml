@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="090472a7-5f66-4b93-95b4-8884d53f185f" name="Changes" comment="fix: fixed community view">
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/application/providers/post_provider.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/data/datasources/post_api_datasource.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/data/dtos/post_dto.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/data/repositories/post_repository_impl.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/domain/entities/post_entitiy.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/domain/repositories/post_repository.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/domain/usecases/get_posts_usecase.dart" afterDir="false" />
+    <list default="true" id="090472a7-5f66-4b93-95b4-8884d53f185f" name="Changes" comment="fix: fixed main.dart">
+      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/widgets/community_header.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/widgets/plant_experts_section.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plant_care/lib/community/presentation/views/community_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/views/community_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plant_care/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/plant_care/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plant_care/lib/community/presentation/views/community_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/views/community_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plant_care/lib/community/presentation/views/comunity_feed_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/views/comunity_feed_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plant_care/lib/community/presentation/widgets/post_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/widgets/post_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plant_care/lib/community/presentation/widgets/post_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/plant_care/lib/community/presentation/widgets/post_list.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +65,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "feature/community",
     "kotlin-language-version-configured": "true",
@@ -75,6 +73,11 @@
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\frhur\AndroidStudioProjects\FrontendMobile\plant_care\lib\community\domain\repositories" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="plantcare" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/plant_care/lib/main.dart" />
@@ -145,7 +148,103 @@
       <option name="project" value="LOCAL" />
       <updated>1762998403699</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="fix: fixed community view">
+      <option name="closed" value="true" />
+      <created>1763002130475</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763002130475</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat: add post provider">
+      <option name="closed" value="true" />
+      <created>1763002157174</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1763002157174</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat: add post entity">
+      <option name="closed" value="true" />
+      <created>1763002165692</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1763002165692</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat: add post repository">
+      <option name="closed" value="true" />
+      <created>1763002175153</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1763002175153</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: add post datasource">
+      <option name="closed" value="true" />
+      <created>1763002182958</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1763002182958</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix: fixed main">
+      <option name="closed" value="true" />
+      <created>1763002493810</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1763002493810</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix: fixed usecases">
+      <option name="closed" value="true" />
+      <created>1763017108682</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1763017108682</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fix: fixed app router">
+      <option name="closed" value="true" />
+      <created>1763017116162</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1763017116162</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fix: fixed community view">
+      <option name="closed" value="true" />
+      <created>1763017130791</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1763017130791</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fix: fixed community joining method">
+      <option name="closed" value="true" />
+      <created>1763017148262</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1763017148262</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix: fixed post entities">
+      <option name="closed" value="true" />
+      <created>1763017178049</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1763017178049</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fix: fixed main.dart">
+      <option name="closed" value="true" />
+      <created>1763017184831</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1763017184831</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -154,8 +253,18 @@
     <MESSAGE value="feat: add community feed item class" />
     <MESSAGE value="feat: add community expert item class" />
     <MESSAGE value="feat: add community feed section class" />
+    <MESSAGE value="feat: add post provider" />
+    <MESSAGE value="feat: add post entity" />
+    <MESSAGE value="feat: add post repository" />
+    <MESSAGE value="feat: add post datasource" />
+    <MESSAGE value="fix: fixed main" />
+    <MESSAGE value="fix: fixed usecases" />
+    <MESSAGE value="fix: fixed app router" />
     <MESSAGE value="fix: fixed community view" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed community view" />
+    <MESSAGE value="fix: fixed community joining method" />
+    <MESSAGE value="fix: fixed post entities" />
+    <MESSAGE value="fix: fixed main.dart" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed main.dart" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
