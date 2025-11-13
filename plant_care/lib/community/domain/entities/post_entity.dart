@@ -6,7 +6,7 @@ class PostEntity {
   final DateTime createdAt;
   final bool highlighted;
 
-  const PostEntity({
+  PostEntity({
     required this.id,
     required this.title,
     required this.content,

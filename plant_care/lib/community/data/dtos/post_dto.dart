@@ -1,4 +1,4 @@
-import '../../domain/entities/post_entitiy.dart';
+import '../../domain/entities/post_entity.dart';
 
 class PostDto {
   final int id;
@@ -17,25 +17,22 @@ class PostDto {
     required this.highlighted,
   });
 
-  factory PostDto.fromJson(Map<String, dynamic> json) {
-    return PostDto(
-      id: json['id'],
-      title: json['title'],
-      content: json['content'],
-      authorId: json['authorID'],
-      createdAt: DateTime.parse(json['createdAt']),
-      highlighted: json['highlighted'],
-    );
-  }
+  factory PostDto.fromJson(Map<String, dynamic> json) => PostDto(
+    id: json['id'],
+    title: json['title'],
+    content: json['content'],
+    authorId: json['authorId'],
+    createdAt: DateTime.parse(json['createdAt']),
+    highlighted: json['highlighted'],
+  );
 
-  PostEntity toEntity() {
-    return PostEntity(
-      id: id,
-      title: title,
-      content: content,
-      authorId: authorId,
-      createdAt: createdAt,
-      highlighted: highlighted,
-    );
-  }
+  /// 👇 ESTE MÉTODO ES NECESARIO
+  PostEntity toEntity() => PostEntity(
+    id: id,
+    title: title,
+    content: content,
+    authorId: authorId,
+    createdAt: createdAt,
+    highlighted: highlighted,
+  );
 }
