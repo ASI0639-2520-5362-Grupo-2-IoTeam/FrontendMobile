@@ -18,13 +18,13 @@ class CustomBottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       backgroundColor:
-          bottomBarTheme.backgroundColor ?? theme.colorScheme.surface,
+      bottomBarTheme.backgroundColor ?? theme.colorScheme.surface,
       selectedItemColor:
-          bottomBarTheme.selectedItemColor ?? AppTheme.primaryGreen,
+      bottomBarTheme.selectedItemColor ?? AppTheme.primaryGreen,
       unselectedItemColor:
-          bottomBarTheme.unselectedItemColor ?? AppTheme.textLight,
+      bottomBarTheme.unselectedItemColor ?? AppTheme.textLight,
       showUnselectedLabels:
-          bottomBarTheme.showUnselectedLabels ?? true,
+      bottomBarTheme.showUnselectedLabels ?? true,
       type: BottomNavigationBarType.fixed,
       onTap: (index) {
         switch (index) {
@@ -35,9 +35,12 @@ class CustomBottomNavBar extends StatelessWidget {
             context.go("/myplants");
             break;
           case 2:
-            context.go("/history");
+            context.go("/community");
             break;
           case 3:
+            context.go("/history");
+            break;
+          case 4:
             context.go("/settings");
             break;
         }
@@ -50,6 +53,10 @@ class CustomBottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.local_florist),
           label: "My Plants",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.group),
+          label: "Community",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.history),
