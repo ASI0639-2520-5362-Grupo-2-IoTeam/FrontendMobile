@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plant_care/subscription/domain/entities/plan_type.dart';
 import 'package:plant_care/subscription/domain/entities/subscription.dart';
-import 'package:plant_care/subscription/domain/repositories/subscription_repository.dart';
+import 'package:plant_care/subscription/infrastructure/repositories/subscription_repository.dart';
 
 class SubscriptionRepositoryImpl implements SubscriptionRepository {
   final String baseUrl;

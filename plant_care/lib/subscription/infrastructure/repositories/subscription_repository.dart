@@ -1,5 +1,5 @@
-import '../entities/plan_type.dart';
-import '../entities/subscription.dart';
+import '../../domain/entities/plan_type.dart';
+import '../../domain/entities/subscription.dart';
 
 abstract class SubscriptionRepository {
   Future<Subscription?> getUserSubscription(String userId);

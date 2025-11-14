@@ -2,7 +2,6 @@ import 'package:go_router/go_router.dart';
 import '../../iam/presentation/widgets/login_view.dart';
 import '../../dashboard/presentation/widgets/dashboard_view.dart';
 import '../../plant_detail/presentation/widgets/plant_detail_view.dart';
-import '../../history/presentation/widgets/history_view.dart';
 import '../views/settings_view.dart';
 import '../../iam/presentation/widgets/register_view.dart'; 
 import '../views/search_filter_view.dart';
@@ -46,11 +45,6 @@ final GoRouter appRouter = GoRouter(
         final id = state.pathParameters['id'] ?? '';
         return PlantDetailView(plantId: id);
       },
-    ),
-    GoRoute(
-      path: '/history',
-      name: 'history',
-      builder: (context, state) => const HistoryView(),
     ),
     GoRoute(
       path: '/settings',
