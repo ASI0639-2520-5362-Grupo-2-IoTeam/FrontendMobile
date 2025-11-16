@@ -4,6 +4,7 @@ enum PlantStatus {
   HEALTHY,
   WARNING,
   DANGER,
+  CRITICAL,
   UNKNOWN; // Estado por defecto
 
   // Factory para convertir el String del API a nuestro enum.
@@ -16,6 +17,8 @@ enum PlantStatus {
         return PlantStatus.WARNING;
       case 'DANGER': // Asumiendo
         return PlantStatus.DANGER;
+      case 'CRITICAL':
+        return PlantStatus.CRITICAL;
       default:
         return PlantStatus.UNKNOWN;
     }

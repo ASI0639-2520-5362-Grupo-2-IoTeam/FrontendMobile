@@ -7,6 +7,7 @@ import 'package:plant_care/plants/presentation/widgets/plant_status_chip.dart';
 
 /// A lightweight preview page that shows fake plants so the UI can be
 /// validated without connecting to the API or Bloc layers.
+/// Now fully aligned with the modern Material 3 grid design.
 class PlantsPreviewPage extends StatelessWidget {
   const PlantsPreviewPage({super.key});
 
@@ -58,50 +59,237 @@ class PlantsPreviewPage extends StatelessWidget {
           ),
         ],
       ),
+      Plant(
+        id: 3,
+        userId: 'fake-user',
+        name: 'Snake Plant',
+        type: 'Sansevieria',
+        imgUrl: 'https://images.unsplash.com/photo-1593482890356-7f90d4d31096',
+        bio: 'Low-maintenance plant with upright sword-shaped leaves.',
+        location: 'Bedroom',
+        status: PlantStatus.CRITICAL,
+        lastWatered: now.subtract(const Duration(days: 15)),
+        nextWatering: now.subtract(const Duration(days: 1)),
+        metrics: [],
+      ),
     ];
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
+      // AppBar moderno y transparente
       appBar: AppBar(
         title: const Text('Preview: Mis Plantas'),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        titleTextStyle: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: colorScheme.onSurface,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.palette),
+            tooltip: 'Preview Mode',
+            onPressed: () {},
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(8.0),
-        itemCount: fakePlants.length,
-        itemBuilder: (context, index) {
-          final plant = fakePlants[index];
-          return _buildPlantCard(context, plant);
-        },
+      body: _PlantsGrid(plants: fakePlants),
+    );
+  }
+}
+
+// Reutilizamos el mismo grid moderno de PlantsListPage para consistencia visual
+class _PlantsGrid extends StatelessWidget {
+  final List<Plant> plants;
+
+  const _PlantsGrid({required this.plants});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        16 + MediaQuery.of(context).padding.bottom + 88,
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.78,
+      ),
+      itemCount: plants.length,
+      itemBuilder: (context, index) {
+        final plant = plants[index];
+        return _PlantGridCard(plant: plant);
+      },
+    );
+  }
+}
+
+// Tarjeta moderna en grid (Material 3) – 100% reutilizable
+class _PlantGridCard extends StatelessWidget {
+  final Plant plant;
+
+  const _PlantGridCard({required this.plant});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Hero(
+      tag: 'plant_card_${plant.id}',
+      child: Card(
+        elevation: 0,
+        color: colorScheme.surfaceContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: colorScheme.outlineVariant, width: 1),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 350),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    PlantDetailPage(plant: plant),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Imagen con hero y badge de estado
+              Expanded(
+                flex: 3,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      plant.imgUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: colorScheme.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.local_florist,
+                          size: 48,
+                          color: colorScheme.outline,
+                        ),
+                      ),
+                    ),
+                    // Status badge
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(
+                            plant.status,
+                            colorScheme,
+                          ).withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: PlantStatusChip(
+                          status: plant.status,
+                          isLarge: false,
+                          textStyle: theme.textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Contenido inferior
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        plant.name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurface,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        plant.type,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 14,
+                            color: colorScheme.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              plant.location,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: colorScheme.primary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildPlantCard(BuildContext context, Plant plant) {
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-      child: ListTile(
-        leading: CircleAvatar(
-          radius: 25,
-          backgroundImage: NetworkImage(plant.imgUrl),
-          onBackgroundImageError: (exception, stackTrace) =>
-              const Icon(Icons.error),
-          backgroundColor: Colors.black12,
-        ),
-        title: Text(plant.name, style: Theme.of(context).textTheme.titleLarge),
-        subtitle: Text(
-          plant.type,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        trailing: PlantStatusChip(status: plant.status),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => PlantDetailPage(plant: plant)),
-          );
-        },
-      ),
-    );
+  Color _getStatusColor(PlantStatus status, ColorScheme colorScheme) {
+    switch (status) {
+      case PlantStatus.HEALTHY:
+        return colorScheme.primary;
+      case PlantStatus.WARNING:
+        return colorScheme.tertiary;
+      case PlantStatus.CRITICAL:
+        return colorScheme.error;
+      case PlantStatus.DANGER:
+        return colorScheme.error;
+      case PlantStatus.UNKNOWN:
+        return Colors.grey;
+    }
   }
 }
