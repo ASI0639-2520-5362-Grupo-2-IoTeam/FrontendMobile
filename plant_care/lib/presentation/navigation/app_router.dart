@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import '../../iam/presentation/widgets/login_view.dart';
 import '../../dashboard/presentation/widgets/dashboard_view.dart';
-import '../../plant_detail/presentation/widgets/plant_detail_view.dart';
+import '../../plants/presentation/plant_detail_view.dart';
 import '../views/settings_view.dart';
 import '../../iam/presentation/widgets/register_view.dart'; 
 import '../views/search_filter_view.dart';
