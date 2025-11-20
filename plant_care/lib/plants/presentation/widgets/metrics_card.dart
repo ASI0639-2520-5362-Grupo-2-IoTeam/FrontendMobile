@@ -1,80 +1,99 @@
-// DRY & SRP: Un widget solo para mostrar la tarjeta de métricas.
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:plant_care/plants/domain/entities/plant_metric.dart';
 
 class MetricsCard extends StatelessWidget {
   final PlantMetric metric;
+
   const MetricsCard({super.key, required this.metric});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final lastUpdated = DateFormat('dd/MM/yy hh:mm a').format(metric.createdAt);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // Formateo de fecha más limpio
+    final lastUpdated = DateFormat('d MMM, hh:mm a').format(metric.createdAt);
+
     return Card(
-      elevation: 4,
-      color: Theme.of(context).colorScheme.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 0, // Modern UI prefiere sombras sutiles o bordes
+      color: colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24), // Bordes más redondeados (Moderno)
+        side: BorderSide(color: colorScheme.outlineVariant.withOpacity(0.3)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- HEADER: Dispositivo y Fecha ---
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                _DeviceBadge(deviceId: metric.deviceId),
+                Row(
                   children: [
-                    Text('Dispositivo', style: textTheme.bodySmall),
-                    const SizedBox(height: 4),
-                    Text(metric.deviceId, style: textTheme.titleMedium),
+                    Icon(Icons.access_time_rounded, 
+                         size: 14, color: theme.hintColor),
+                    const SizedBox(width: 4),
+                    Text(
+                      lastUpdated,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.hintColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text('Última lectura', style: textTheme.bodySmall),
-                    const SizedBox(height: 4),
-                    Text(lastUpdated, style: textTheme.bodyMedium),
-                  ],
+              ],
+            ),
+            const SizedBox(height: 20),
+            
+            // --- GRID DE MÉTRICAS (Bento Style) ---
+            Row(
+              children: [
+                Expanded(
+                  child: _MetricTile(
+                    label: 'Temperatura',
+                    value: metric.temperature.toStringAsFixed(1),
+                    unit: '°C',
+                    icon: Icons.thermostat_rounded,
+                    accentColor: const Color(0xFFFF6B6B), // Naranja/Rojo suave
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _MetricTile(
+                    label: 'Humedad',
+                    value: metric.humidity.toStringAsFixed(0), // Sin decimales suele ser mejor
+                    unit: '%',
+                    icon: Icons.water_drop_rounded,
+                    accentColor: const Color(0xFF4ECDC4), // Turquesa
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            // Big metric row
             Row(
               children: [
-                _BigMetricTile(
-                  icon: Icons.thermostat,
-                  label: 'Temperatura',
-                  value: '${metric.temperature.toStringAsFixed(1)}',
-                  unit: '°C',
+                Expanded(
+                  child: _MetricTile(
+                    label: 'Luz',
+                    value: metric.light.toStringAsFixed(0),
+                    unit: 'lx',
+                    icon: Icons.wb_sunny_rounded,
+                    accentColor: const Color(0xFFFFD93D), // Amarillo Sol
+                  ),
                 ),
-                const SizedBox(width: 8),
-                _BigMetricTile(
-                  icon: Icons.water_drop,
-                  label: 'Humedad',
-                  value: '${metric.humidity.toStringAsFixed(1)}',
-                  unit: '%',
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                _BigMetricTile(
-                  icon: Icons.wb_sunny,
-                  label: 'Luz',
-                  value: '${metric.light.toStringAsFixed(0)}',
-                  unit: 'lux',
-                ),
-                const SizedBox(width: 8),
-                _BigMetricTile(
-                  icon: Icons.terrain,
-                  label: 'Suelo',
-                  value: '${metric.soilHumidity.toStringAsFixed(1)}',
-                  unit: '%',
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _MetricTile(
+                    label: 'Suelo',
+                    value: metric.soilHumidity.toStringAsFixed(0),
+                    unit: '%',
+                    icon: Icons.grass_rounded,
+                    accentColor: const Color(0xFF6A994E), // Verde Planta
+                  ),
                 ),
               ],
             ),
@@ -85,58 +104,116 @@ class MetricsCard extends StatelessWidget {
   }
 }
 
-// Widget interno para cada métrica
-class _BigMetricTile extends StatelessWidget {
-  final IconData icon;
+// --- WIDGETS INTERNOS (DRY & SRP) ---
+
+class _DeviceBadge extends StatelessWidget {
+  final String deviceId;
+  const _DeviceBadge({required this.deviceId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.sensors,
+            size: 16,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            deviceId,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricTile extends StatelessWidget {
   final String label;
   final String value;
   final String unit;
+  final IconData icon;
+  final Color accentColor;
 
-  const _BigMetricTile({
-    required this.icon,
+  const _MetricTile({
     required this.label,
     required this.value,
     required this.unit,
+    required this.icon,
+    required this.accentColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceVariant,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: colorScheme.primary, size: 22),
-                const SizedBox(width: 8),
-                Text(label, style: textTheme.bodySmall),
-              ],
+    final theme = Theme.of(context);
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        // Un fondo muy sutil basado en el color del acento da un look "Glassy"
+        color: accentColor.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icono con círculo de fondo
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: accentColor.withOpacity(0.2),
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            child: Icon(icon, color: accentColor, size: 20),
+          ),
+          const SizedBox(height: 12),
+          
+          // Valor Numérico Grande
+          RichText(
+            text: TextSpan(
               children: [
-                Text(
-                  value,
-                  style: textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                TextSpan(
+                  text: value,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                    height: 1.0,
                   ),
                 ),
-                const SizedBox(width: 6),
-                Text(unit, style: textTheme.bodySmall),
+                TextSpan(
+                  text: unit,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 4),
+          
+          // Etiqueta descriptiva
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.outline,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

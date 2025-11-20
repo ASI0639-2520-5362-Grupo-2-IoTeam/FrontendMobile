@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:plant_care/plants/domain/entities/plant.dart';
 import 'package:plant_care/plants/domain/entities/plant_metric.dart';
@@ -74,33 +75,101 @@ class PlantsPreviewPage extends StatelessWidget {
       ),
     ];
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      // AppBar moderno y transparente
-      appBar: AppBar(
-        title: const Text('Preview: Mis Plantas'),
-        centerTitle: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        titleTextStyle: theme.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.palette),
-            tooltip: 'Preview Mode',
-            onPressed: () {},
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // Reuse the glassmorphic app bar look from the detail page
+          _buildAppBar(context, fakePlants.first),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              child: _PlantsGrid(plants: fakePlants),
+            ),
           ),
-          const SizedBox(width: 8),
         ],
       ),
-      body: _PlantsGrid(plants: fakePlants),
     );
   }
+}
+
+Widget _buildAppBar(BuildContext context, Plant plant) {
+  final theme = Theme.of(context);
+  return SliverAppBar(
+    expandedHeight: 320,
+    backgroundColor: Colors.transparent,
+    stretch: true,
+    pinned: true,
+    leading: Container(
+      margin: const EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(50),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: Container(
+            color: Colors.white.withOpacity(0.5),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 18,
+                color: Colors.black,
+              ),
+              onPressed: () => Navigator.maybePop(context),
+            ),
+          ),
+        ),
+      ),
+    ),
+    flexibleSpace: FlexibleSpaceBar(
+      background: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.network(
+            plant.imgUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                Container(color: theme.colorScheme.surfaceVariant),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.transparent, Colors.black.withOpacity(0.45)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 20,
+            bottom: 28,
+            right: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  plant.name,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  plant.type.toUpperCase(),
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 // Reutilizamos el mismo grid moderno de PlantsListPage para consistencia visual
@@ -112,12 +181,9 @@ class _PlantsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.fromLTRB(
-        16,
-        16,
-        16,
-        16 + MediaQuery.of(context).padding.bottom + 88,
-      ),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(top: 0, bottom: 8),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 16,

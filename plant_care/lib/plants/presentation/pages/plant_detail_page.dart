@@ -1,154 +1,158 @@
+import 'dart:ui'; // Necesario para ImageFilter (Blur)
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_care/plants/domain/entities/plant.dart';
-import 'package:plant_care/plants/presentation/widgets/plant_status_chip.dart';
-import 'package:plant_care/plants/presentation/widgets/metrics_card.dart';
+import 'package:plant_care/plants/domain/entities/plant_metric.dart';
+import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
+import 'package:plant_care/plants/presentation/widgets/metrics_card.dart'; // Tu widget anterior
 
 class PlantDetailPage extends StatelessWidget {
-  final Plant plant;
+  final Plant plant; // Agregado para aceptar el parámetro 'plant'
+
   const PlantDetailPage({super.key, required this.plant});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-    final DateFormat formatter = DateFormat('dd/MM/yyyy \'a las\' hh:mm a');
+    // Datos falsos para previsualización
+    final fakeMetrics = [
+      PlantMetric(
+        deviceId: 'device123',
+        temperature: 22.5,
+        humidity: 60.0,
+        soilHumidity: 45.0,
+        light: 300.0,
+        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
+      ),
+      PlantMetric(
+        deviceId: 'device123',
+        temperature: 23.0,
+        humidity: 58.0,
+        soilHumidity: 50.0,
+        light: 320.0,
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+    ];
+
+    final fakePlant = Plant(
+      id: 1,
+      userId: 'user123',
+      name: 'Ficus Lyrata',
+      type: 'Interior',
+      imgUrl: 'https://via.placeholder.com/350x150',
+      bio: 'Una planta tropical que requiere luz indirecta y riego moderado.',
+      location: 'Sala de estar',
+      status: PlantStatus.HEALTHY,
+      lastWatered: DateTime.now().subtract(const Duration(days: 3)),
+      nextWatering: DateTime.now().add(const Duration(days: 4)),
+      metrics: fakeMetrics,
+    );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(plant.name),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: colorScheme.onSurface,
-        surfaceTintColor: Colors.transparent,
-      ),
-      extendBodyBehindAppBar: true,
-      body: CustomScrollView(
-        slivers: [
-          // Hero image with overlay gradient and title
-          SliverAppBar(
-            expandedHeight: 320,
-            pinned: false,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Hero(
-                    tag: 'plant_image_${plant.id}',
-                    child: Image.network(
-                      plant.imgUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: colorScheme.surfaceContainerHighest,
-                        child: Icon(
-                          Icons.local_florist,
-                          size: 120,
-                          color: colorScheme.outline,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Gradient overlay
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.7),
-                        ],
-                        stops: const [0.5, 1.0],
-                      ),
-                    ),
-                  ),
-                  // Plant name at bottom of image
-                  Positioned(
-                    bottom: 24,
-                    left: 24,
-                    right: 24,
-                    child: Text(
-                      plant.name,
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          const Shadow(
-                            blurRadius: 8,
-                            color: Colors.black54,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-          ),
+      appBar: AppBar(title: const Text('Vista previa de planta')),
+      body: PlantDetailPageContent(plant: fakePlant),
+    );
+  }
+}
 
+class PlantDetailPageContent extends StatelessWidget {
+  final Plant plant;
+  const PlantDetailPageContent({super.key, required this.plant});
+
+  @override
+  Widget build(BuildContext context) {
+    // Color de fondo clásico de iOS Grouped Background
+    const backgroundColor = Color(0xFFF2F2F7);
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(), // Rebote estilo iOS
+        slivers: [
+          _buildAppBar(context),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
+                  // Título Grande estilo "Large Title"
+                  Text(
+                    plant.name,
+                    style: const TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
 
-                  // Quick info chips in a wrap for responsiveness
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                  // Subtítulo / Especie
+                  Text(
+                    plant.type.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[500],
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Bloque 1: Estado y Ubicación (Row estilizada)
+                  _buildInfoRow(context),
+                  const SizedBox(height: 24),
+
+                  // Bloque 2: Biografía (Container Blanco)
+                  _iOSSectionTitle('Biografía'),
+                  _iOSContentContainer(
+                    child: Text(
+                      plant.bio,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Color(0xFF3A3A3C), // Gris oscuro iOS
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Bloque 3: Riego (Grid 2 columnas)
+                  _iOSSectionTitle('Ciclo de Riego'),
+                  Row(
                     children: [
-                      _InfoChip(icon: Icons.grass, label: plant.type),
-                      _InfoChip(icon: Icons.location_on, label: plant.location),
-                      PlantStatusChip(status: plant.status, isLarge: true),
+                      Expanded(
+                        child: _WateringTile(
+                          label: 'Último riego',
+                          date: plant.lastWatered,
+                          icon: Icons.water_drop_rounded,
+                          color: const Color(0xFF007AFF), // iOS Blue
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _WateringTile(
+                          label: 'Próximo riego',
+                          date: plant.nextWatering,
+                          icon: Icons.access_alarm_rounded,
+                          color: const Color(0xFFFF9500), // iOS Orange
+                          isNext: true,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 24),
 
-                  // Biography section
-                  _SectionTitle(title: 'Biografía'),
-                  const SizedBox(height: 8),
-                  Text(
-                    plant.bio,
-                    style: textTheme.bodyLarge?.copyWith(
-                      height: 1.5,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Watering section
-                  _SectionTitle(title: 'Riego'),
-                  const SizedBox(height: 12),
-                  _WateringCard(
-                    icon: Icons.water_drop,
-                    title: 'Último Riego',
-                    value: formatter.format(plant.lastWatered),
-                    color: colorScheme.primary,
-                  ),
-                  const SizedBox(height: 12),
-                  _WateringCard(
-                    icon: Icons.alarm,
-                    title: 'Próximo Riego',
-                    value: formatter.format(plant.nextWatering),
-                    color: colorScheme.tertiary,
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Metrics section
-                  _SectionTitle(title: 'Métricas (IoT)'),
-                  const SizedBox(height: 12),
+                  // Bloque 4: Métricas (Tu widget anterior)
+                  _iOSSectionTitle('Sensores en vivo'),
                   if (plant.latestMetric != null)
+                    // Usar MetricsCard directamente
                     MetricsCard(metric: plant.latestMetric!)
                   else
-                    _EmptyStateCard(message: 'No hay datos de métricas disponibles.'),
-                  const SizedBox(height: 24),
+                    _iOSContentContainer(
+                      child: const Center(
+                        child: Text('Conectando sensores...'),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -157,104 +161,70 @@ class PlantDetailPage extends StatelessWidget {
       ),
     );
   }
-}
 
-// Reusable section title with Material 3 typography
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  const _SectionTitle({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).colorScheme.primary,
+  // --- APP BAR CON EFECTO BLUR (Glassmorphism) ---
+  Widget _buildAppBar(BuildContext context) {
+    return SliverAppBar(
+      expandedHeight: 350,
+      backgroundColor: Colors.transparent,
+      stretch: true,
+      pinned: true,
+      leading: Container(
+        margin: const EdgeInsets.all(8),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Container(
+              color: const Color.fromARGB(127, 255, 255, 255),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 18,
+                  color: Colors.black,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
           ),
-    );
-  }
-}
-
-// Enhanced info chip with Material 3 styling
-class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _InfoChip({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return InputChip(
-      avatar: Icon(icon, size: 18, color: colorScheme.primary),
-      label: Text(
-        label,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+        ),
+      ),
+      actions: [
+        Container(
+          margin: const EdgeInsets.all(8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              child: Container(
+                color: const Color.fromARGB(127, 255, 255, 255),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    size: 18,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {},
+                ),
+              ),
             ),
-      ),
-      backgroundColor: colorScheme.surfaceContainerHighest,
-      side: BorderSide(color: colorScheme.outlineVariant, width: 1),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-    );
-  }
-}
-
-// Card-style watering row with elevation and color accent
-class _WateringCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-  final Color color;
-
-  const _WateringCard({
-    required this.icon,
-    required this.title,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Card(
-      elevation: 0,
-      color: colorScheme.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
+          ),
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          fit: StackFit.expand,
           children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundColor: color.withOpacity(0.12),
-              child: Icon(icon, size: 20, color: color),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    value,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                ],
+            // Imagen de la planta
+            Image.network(plant.imgUrl, fit: BoxFit.cover),
+            // Degradado para mejorar contraste
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.black.withOpacity(0.2), Colors.transparent],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
               ),
             ),
           ],
@@ -262,34 +232,165 @@ class _WateringCard extends StatelessWidget {
       ),
     );
   }
-}
 
-// Empty state card with subtle styling
-class _EmptyStateCard extends StatelessWidget {
-  final String message;
-  const _EmptyStateCard({required this.message});
+  // --- Helpers iOS-like ---
+  Widget _buildInfoRow(BuildContext context) {
+    Color statusColor;
+    String statusText;
+    switch (plant.status) {
+      case PlantStatus.HEALTHY:
+        statusColor = Colors.green;
+        statusText = 'Sana';
+        break;
+      case PlantStatus.WARNING:
+        statusColor = Colors.orange;
+        statusText = 'Precaución';
+        break;
+      case PlantStatus.DANGER:
+        statusColor = Colors.red;
+        statusText = 'En peligro';
+        break;
+      case PlantStatus.CRITICAL:
+        statusColor = Colors.deepPurple;
+        statusText = 'Crítico';
+        break;
+      case PlantStatus.UNKNOWN:
+        statusColor = Colors.grey;
+        statusText = 'Desconocido';
+        break;
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      elevation: 0,
-      color: colorScheme.surfaceContainerLow,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: colorScheme.outlineVariant, width: 1),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: Text(
-            message,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: statusColor.withAlpha(31),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: statusColor,
+                  shape: BoxShape.circle,
                 ),
-            textAlign: TextAlign.center,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                statusText,
+                style: TextStyle(
+                  color: statusColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                size: 18,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  plant.location,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _iOSSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+        ),
+      ),
+    );
+  }
+
+  Widget _iOSContentContainer({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _WateringTile({
+    required String label,
+    required DateTime date,
+    required IconData icon,
+    required Color color,
+    bool isNext = false,
+  }) {
+    final formatted = '${date.day}/${date.month}/${date.year}';
+    return _iOSContentContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(31),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(formatted, style: TextStyle(color: Colors.grey[600])),
+                ],
+              ),
+            ],
+          ),
+          if (isNext) ...[
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: color,
+                elevation: 0,
+              ),
+              child: const Text('Marcar como regado'),
+            ),
+          ],
+        ],
       ),
     );
   }
