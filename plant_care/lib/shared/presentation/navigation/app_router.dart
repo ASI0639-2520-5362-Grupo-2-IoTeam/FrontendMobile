@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
-import '../../iam/presentation/widgets/login_view.dart';
-import '../../dashboard/presentation/widgets/dashboard_view.dart';
-import '../../plant_detail/presentation/widgets/plant_detail_view.dart';
-import '../views/settings_view.dart';
-import '../../iam/presentation/widgets/register_view.dart'; 
-import '../views/search_filter_view.dart';
-import '../../subscription/presentation/pages/subscription_view.dart';
-import '../../plants/presentation/widgets/myplants_view.dart';
+import '../../../iam/presentation/widgets/login_view.dart';
+import '../../../dashboard/presentation/widgets/dashboard_view.dart';
+import '../../../plants/presentation/widgets/plant_detail_view.dart';
+import '../../presentation/views/settings_view.dart';
+import '../../../iam/presentation/widgets/register_view.dart';
+import '../../presentation/views/search_filter_view.dart';
+import '../../../subscription/presentation/pages/subscription_view.dart';
+import '../../../plants/presentation/widgets/myplants_view.dart';
 
-import 'package:plant_care/presentation/views/splash_view.dart';
+import 'package:plant_care/shared/presentation/views/splash_view.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',

@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // 🎨 Colores base
-  static const Color primaryGreen = Color(0xFF8AC73D); // verde principal
-  static const Color secondaryGreen = Color(0xFFA5D6A7); // verde suave
-  static const Color background = Color(0xFFF7F7ED); // fondo casi blanco
+  // Colores base
+  static const Color primaryGreen = Color(0xFF8AC73D);
+  static const Color secondaryGreen = Color(0xFFA5D6A7);
+  static const Color background = Color(0xFFF7F7ED);
   static const Color textDark = Color(0xFF212121);
   static const Color textLight = Color(0xFF757575);
 
-  // 🎯 Colores de estado
+  // Colores de estado
   static const Color healthyColor = primaryGreen;
-  static const Color warningColor = Color(0xFFFFC107); // amarillo Material
-  static const Color criticalColor = Color(0xFFE53935); // rojo intenso
+  static const Color warningColor = Color(0xFFFFC107);
+  static const Color criticalColor = Color(0xFFE53935);
 
-  // 🔹 Helper para colores de estado
+  // Helper para colores de estado
   static Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case "healthy":
@@ -53,7 +53,7 @@ class AppTheme {
         secondary: secondaryGreen,
         surface: background,
         error: criticalColor,
-        tertiary: warningColor, // ⚠️ warning mapeado como tertiary
+        tertiary: warningColor, // warning mapeado como tertiary
       ),
       textTheme: GoogleFonts.ralewayTextTheme().copyWith(
         headlineLarge: GoogleFonts.raleway(
