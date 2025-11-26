@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_care/shared/presentation/theme/theme.dart';
-import '../../../shared/presentation/widgets/custom_bottom_navbar.dart';
-import '../../../plants/presentation/widgets/plant_detail_view.dart';
+import 'package:plant_care/presentation/theme/theme.dart';
+import '../../../presentation/widgets/custom_bottom_navbar.dart';
+import '../../../plants/presentation/plant_detail_view.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
