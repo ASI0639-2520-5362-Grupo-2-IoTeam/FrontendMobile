@@ -1,6 +1,6 @@
-import 'package:plant_care/iam/data/models/user_model.dart';
+import 'package:plant_care/iam/infrastructure/models/user_model.dart';
 
-import '../repositories/auth_repository.dart';
+import '../../domain/repositories/auth_repository.dart';
 
 class RegisterUseCase {
 

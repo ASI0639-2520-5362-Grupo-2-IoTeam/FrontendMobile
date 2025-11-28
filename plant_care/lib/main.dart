@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:plant_care/iam/domain/usecases/google_signin_usecase.dart';
+import 'package:plant_care/iam/application/usecases/google_signin_usecase.dart';
 import 'package:plant_care/shared/presentation/navigation/app_router.dart';
 import 'package:provider/provider.dart';
-import 'iam/data/datasources/auth_api_service.dart';
-import 'iam/data/repositories/auth_repository_impl.dart';
-import 'iam/domain/usecases/login_usecase.dart';
-import 'iam/domain/usecases/register_usecase.dart';
+import 'iam/infrastructure/datasources/auth_api_service.dart';
+import 'iam/infrastructure/repositories/auth_repository_impl.dart';
+import 'iam/application/usecases/login_usecase.dart';
+import 'iam/application/usecases/register_usecase.dart';
 import 'iam/presentation/providers/auth_provider.dart';
 import 'plants/presentation/providers/plant_provider.dart';
 import 'shared/presentation/theme/theme.dart';
