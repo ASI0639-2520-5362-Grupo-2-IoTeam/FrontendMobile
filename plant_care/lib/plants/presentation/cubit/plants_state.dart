@@ -1,6 +1,5 @@
 part of 'plants_cubit.dart';
 
-// Patrón State: Definimos los posibles estados de nuestra UI
 abstract class PlantsState extends Equatable {
   const PlantsState();
 

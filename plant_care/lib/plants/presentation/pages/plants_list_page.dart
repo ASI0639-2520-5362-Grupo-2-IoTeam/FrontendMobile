@@ -1,89 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Para HapticFeedback
+import 'package:flutter/services.dart'; 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant_care/plants/domain/entities/plant.dart';
 import 'package:plant_care/plants/domain/entities/plant_metric.dart';
 import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
 import 'package:plant_care/plants/presentation/cubit/plants_cubit.dart';
 import 'package:plant_care/plants/presentation/pages/plant_detail_page.dart';
-// Asegúrate de tener tus imports correctos para los widgets personalizados
 
 class PlantsListPage extends StatelessWidget {
-  final bool useFakeData;
-
-  const PlantsListPage({super.key, this.useFakeData = false});
+  const PlantsListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Color de fondo estilo iOS Grouped
-    const backgroundColor = Color(0xFFF2F2F7); 
+   
+    const backgroundColor = Color(0xFFF2F2F7);
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: CustomScrollView(
-        // Rebote característico de iOS
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // 1. APP BAR TIPO "LARGE TITLE"
-          SliverAppBar.large(
-            backgroundColor: backgroundColor,
-            surfaceTintColor: Colors.transparent, // Evita el tinte de Material 3
-            title: const Text(
-              'Mis Plantas',
-              style: TextStyle(
-                color: Colors.black, 
-                fontWeight: FontWeight.w700,
-                letterSpacing: -1.0, // Kerning apretado estilo Apple
+      
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: CustomScrollView(
+        
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            
+            SliverAppBar.large(
+              backgroundColor: backgroundColor,
+              surfaceTintColor:
+                  Colors.transparent, 
+              title: const Text(
+                'Mis Plantas',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -1.0, 
+                ),
               ),
+              centerTitle: false,
+              expandedHeight: 120,
+              floating: true,
+              pinned: true,
+              actions: [
+                
+                IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: const Icon(
+                      Icons.search,
+                      size: 20,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onPressed: () {
+                    
+                  },
+                ),
+                
+                IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black, 
+                    ),
+                    child: const Icon(Icons.add, size: 20, color: Colors.white),
+                  ),
+                  onPressed: () {
+                   
+                    HapticFeedback.lightImpact();
+                    
+                  },
+                ),
+                const SizedBox(width: 16),
+              ],
             ),
-            centerTitle: false,
-            expandedHeight: 120,
-            floating: true,
-            pinned: true,
-            actions: [
-               // Botón Buscar (Icono gris sutil)
-               IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: const Icon(Icons.search, size: 20, color: Colors.black),
-                ),
-                onPressed: () { /* TODO: Search */ },
-              ),
-              // Botón Añadir (Estilo iOS Header)
-              IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black, // Acento fuerte
-                  ),
-                  child: const Icon(Icons.add, size: 20, color: Colors.white),
-                ),
-                onPressed: () { 
-                  // Haptic Feedback al pulsar botones importantes
-                  HapticFeedback.lightImpact();
-                  /* TODO: Add Plant */ 
-                },
-              ),
-              const SizedBox(width: 16),
-            ],
-          ),
 
-          // 2. CONTENIDO DE LA LISTA (GRILLA)
-          if (useFakeData)
-             _buildFakeGrid(context)
-          else
             BlocBuilder<PlantsCubit, PlantsState>(
               builder: (context, state) {
                 if (state is PlantsLoading) {
                   return const SliverFillRemaining(child: _LoadingState());
                 }
                 if (state is PlantsError) {
-                  return SliverFillRemaining(child: _ErrorState(message: state.message));
+                  return SliverFillRemaining(
+                    child: _ErrorState(message: state.message),
+                  );
                 }
                 if (state is PlantsLoaded) {
                   if (state.plants.isEmpty) {
@@ -95,35 +101,18 @@ class PlantsListPage extends StatelessWidget {
               },
             ),
             
-          // Espacio extra abajo para que no choque con la barra de navegación del sistema
-          const SliverToBoxAdapter(child: SizedBox(height: 40)),
-        ],
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 40 + MediaQuery.of(context).padding.bottom,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  Widget _buildFakeGrid(BuildContext context) {
-    // (Tu data falsa original aquí, omitida para brevedad pero se mantiene igual)
-    final now = DateTime.now();
-    final fakePlants = [
-      Plant(
-        id: 1, userId: 'u1', name: 'Monstera Deliciosa', type: 'Monstera',
-        imgUrl: 'https://images.unsplash.com/photo-1516728778615-2d590ea1856f',
-        bio: '...', location: 'Sala', status: PlantStatus.HEALTHY,
-        lastWatered: now, nextWatering: now, metrics: []
-      ),
-       Plant(
-        id: 2, userId: 'u2', name: 'Ficus Lyrata', type: 'Ficus',
-        imgUrl: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6',
-        bio: '...', location: 'Oficina', status: PlantStatus.WARNING,
-        lastWatered: now, nextWatering: now, metrics: []
-      ),
-    ];
-    return _PlantsSliverGrid(plants: fakePlants);
-  }
 }
 
-// Usamos SliverPadding + SliverGrid para integrarlo en el CustomScrollView
 class _PlantsSliverGrid extends StatelessWidget {
   final List<Plant> plants;
 
@@ -131,22 +120,35 @@ class _PlantsSliverGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = screenWidth >= 900
+        ? 4
+        : (screenWidth >= 600 ? 3 : 2);
+
+    const double horizontalPadding =
+        20.0 * 2.0; 
+    const double spacing = 16.0;
+    final totalSpacing = spacing * (crossAxisCount - 1);
+    final cellWidth =
+        (screenWidth - horizontalPadding - totalSpacing) / crossAxisCount;
+
+    final desiredHeight = cellWidth * 1.35;
+    final childAspectRatio = cellWidth / desiredHeight;
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       sliver: SliverGrid(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 0.75, // Un poco más alto para la imagen
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          mainAxisSpacing: spacing,
+          crossAxisSpacing: spacing,
+          childAspectRatio: childAspectRatio,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final plant = plants[index];
-            return _AppleStyleCard(plant: plant);
-          },
-          childCount: plants.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final plant = plants[index];
+          return _AppleStyleCard(plant: plant);
+        }, childCount: plants.length),
       ),
     );
   }
@@ -161,7 +163,7 @@ class _AppleStyleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navegación nativa de iOS
+      
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => PlantDetailPage(plant: plant)),
@@ -171,7 +173,6 @@ class _AppleStyleCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          // Sombra estilo Apple: muy difusa y transparente
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
@@ -183,24 +184,27 @@ class _AppleStyleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // --- IMAGEN ---
+          
             Expanded(
               flex: 4,
               child: Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     child: SizedBox(
                       width: double.infinity,
                       height: double.infinity,
                       child: Image.network(
                         plant.imgUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.image_not_supported, color: Colors.grey)),
+                        errorBuilder: (_, __, ___) => const Center(
+                          child: Icon(Icons.image_not_supported),
+                        ),
                       ),
                     ),
                   ),
-                  // Badge de estado flotante (Glassmorphism sutil)
                   Positioned(
                     top: 10,
                     right: 10,
@@ -209,9 +213,9 @@ class _AppleStyleCard extends StatelessWidget {
                 ],
               ),
             ),
-            
-            // --- INFO ---
-            Expanded(
+
+            // Info inferior
+            Flexible(
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -224,10 +228,11 @@ class _AppleStyleCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF8E8E93), // Gris iOS
+                        color: Color(0xFF8E8E93),
                         letterSpacing: 0.5,
                       ),
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -244,21 +249,26 @@ class _AppleStyleCard extends StatelessWidget {
                     const Spacer(),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_rounded, size: 12, color: Color(0xFF007AFF)),
+                        const Icon(
+                          Icons.location_on_rounded,
+                          size: 12,
+                          color: Color(0xFF007AFF),
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             plant.location,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF007AFF), // Azul iOS
+                              color: Color(0xFF007AFF),
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -276,40 +286,48 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Colores semánticos tipo Apple
+
     Color color;
     switch (status) {
-      case PlantStatus.HEALTHY: color = const Color(0xFF34C759); break; // Green
-      case PlantStatus.WARNING: color = const Color(0xFFFF9500); break; // Orange
-      case PlantStatus.CRITICAL: color = const Color(0xFFFF3B30); break; // Red
-      default: color = Colors.grey;
+      case PlantStatus.HEALTHY:
+        color = const Color(0xFF34C759);
+        break; // Green
+      case PlantStatus.WARNING:
+        color = const Color(0xFFFF9500);
+        break; // Orange
+      case PlantStatus.CRITICAL:
+        color = const Color(0xFFFF3B30);
+        break; // Red
+      default:
+        color = Colors.grey;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9), // Semi-transparente
+        color: Colors.white.withOpacity(0.9), 
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)
-        ]
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 6, height: 6,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 6),
           Text(
             _statusText(status),
             style: TextStyle(
-              color: color, 
-              fontSize: 10, 
-              fontWeight: FontWeight.bold
+              color: color,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -318,12 +336,14 @@ class _StatusBadge extends StatelessWidget {
   String _statusText(PlantStatus s) => s.toString().split('.').last;
 }
 
-// Estados Vacíos y de Carga minimalistas
+
 class _LoadingState extends StatelessWidget {
   const _LoadingState();
   @override
   Widget build(BuildContext context) {
-    return const Center(child: CircularProgressIndicator.adaptive()); // Adaptive usa el spinner de iOS
+    return const Center(
+      child: CircularProgressIndicator.adaptive(),
+    ); 
   }
 }
 
@@ -335,9 +355,16 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.energy_savings_leaf_outlined, size: 64, color: Colors.grey[300]),
+          Icon(
+            Icons.energy_savings_leaf_outlined,
+            size: 64,
+            color: Colors.grey[300],
+          ),
           const SizedBox(height: 16),
-          const Text("Sin plantas", style: TextStyle(color: Colors.grey, fontSize: 18)),
+          const Text(
+            "Without plants",
+            style: TextStyle(color: Colors.grey, fontSize: 18),
+          ),
         ],
       ),
     );
@@ -349,6 +376,8 @@ class _ErrorState extends StatelessWidget {
   const _ErrorState({required this.message});
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(message, style: const TextStyle(color: Colors.red)));
+    return Center(
+      child: Text(message, style: const TextStyle(color: Colors.red)),
+    );
   }
 }

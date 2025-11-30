@@ -1,54 +1,25 @@
-import 'dart:ui'; // Necesario para ImageFilter (Blur)
+import 'dart:ui'; 
 import 'package:flutter/material.dart';
 import 'package:plant_care/plants/domain/entities/plant.dart';
-import 'package:plant_care/plants/domain/entities/plant_metric.dart';
 import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
-import 'package:plant_care/plants/presentation/widgets/metrics_card.dart'; // Tu widget anterior
+import 'package:plant_care/plants/presentation/widgets/metrics_card.dart'; 
 
 class PlantDetailPage extends StatelessWidget {
-  final Plant plant; // Agregado para aceptar el parámetro 'plant'
+  final Plant plant; 
 
   const PlantDetailPage({super.key, required this.plant});
 
   @override
   Widget build(BuildContext context) {
-    // Datos falsos para previsualización
-    final fakeMetrics = [
-      PlantMetric(
-        deviceId: 'device123',
-        temperature: 22.5,
-        humidity: 60.0,
-        soilHumidity: 45.0,
-        light: 300.0,
-        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-      ),
-      PlantMetric(
-        deviceId: 'device123',
-        temperature: 23.0,
-        humidity: 58.0,
-        soilHumidity: 50.0,
-        light: 320.0,
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-      ),
-    ];
-
-    final fakePlant = Plant(
-      id: 1,
-      userId: 'user123',
-      name: 'Ficus Lyrata',
-      type: 'Interior',
-      imgUrl: 'https://via.placeholder.com/350x150',
-      bio: 'Una planta tropical que requiere luz indirecta y riego moderado.',
-      location: 'Sala de estar',
-      status: PlantStatus.HEALTHY,
-      lastWatered: DateTime.now().subtract(const Duration(days: 3)),
-      nextWatering: DateTime.now().add(const Duration(days: 4)),
-      metrics: fakeMetrics,
-    );
-
+    
     return Scaffold(
-      appBar: AppBar(title: const Text('Vista previa de planta')),
-      body: PlantDetailPageContent(plant: fakePlant),
+      appBar: AppBar(title: Text(plant.name)),
+      
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: PlantDetailPageContent(plant: plant),
+      ),
     );
   }
 }
@@ -59,22 +30,26 @@ class PlantDetailPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Color de fondo clásico de iOS Grouped Background
+    
     const backgroundColor = Color(0xFFF2F2F7);
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(), // Rebote estilo iOS
+    return Container(
+      color: backgroundColor,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(), 
         slivers: [
           _buildAppBar(context),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+              padding: EdgeInsets.fromLTRB(
+                20,
+                20,
+                20,
+                40 + MediaQuery.of(context).padding.bottom,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Título Grande estilo "Large Title"
                   Text(
                     plant.name,
                     style: const TextStyle(
@@ -86,7 +61,7 @@ class PlantDetailPageContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Subtítulo / Especie
+                  
                   Text(
                     plant.type.toUpperCase(),
                     style: TextStyle(
@@ -98,43 +73,43 @@ class PlantDetailPageContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // Bloque 1: Estado y Ubicación (Row estilizada)
+                  
                   _buildInfoRow(context),
                   const SizedBox(height: 24),
 
-                  // Bloque 2: Biografía (Container Blanco)
-                  _iOSSectionTitle('Biografía'),
+                  
+                  _iOSSectionTitle('Biography'),
                   _iOSContentContainer(
                     child: Text(
                       plant.bio,
                       style: const TextStyle(
                         fontSize: 16,
                         height: 1.5,
-                        color: Color(0xFF3A3A3C), // Gris oscuro iOS
+                        color: Color(0xFF3A3A3C), 
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
 
-                  // Bloque 3: Riego (Grid 2 columnas)
-                  _iOSSectionTitle('Ciclo de Riego'),
+                  
+                  _iOSSectionTitle('Irrigation Cycle'),
                   Row(
                     children: [
                       Expanded(
                         child: _WateringTile(
-                          label: 'Último riego',
+                          label: 'Last watering',
                           date: plant.lastWatered,
                           icon: Icons.water_drop_rounded,
-                          color: const Color(0xFF007AFF), // iOS Blue
+                          color: const Color(0xFF007AFF), 
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: _WateringTile(
-                          label: 'Próximo riego',
+                          label: 'Next watering',
                           date: plant.nextWatering,
                           icon: Icons.access_alarm_rounded,
-                          color: const Color(0xFFFF9500), // iOS Orange
+                          color: const Color(0xFFFF9500), 
                           isNext: true,
                         ),
                       ),
@@ -142,15 +117,15 @@ class PlantDetailPageContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // Bloque 4: Métricas (Tu widget anterior)
-                  _iOSSectionTitle('Sensores en vivo'),
+               
+                  _iOSSectionTitle('Live sensors'),
                   if (plant.latestMetric != null)
-                    // Usar MetricsCard directamente
+                  
                     MetricsCard(metric: plant.latestMetric!)
                   else
                     _iOSContentContainer(
                       child: const Center(
-                        child: Text('Conectando sensores...'),
+                        child: Text('Connecting sensors...'),
                       ),
                     ),
                 ],
@@ -162,7 +137,7 @@ class PlantDetailPageContent extends StatelessWidget {
     );
   }
 
-  // --- APP BAR CON EFECTO BLUR (Glassmorphism) ---
+
   Widget _buildAppBar(BuildContext context) {
     return SliverAppBar(
       expandedHeight: 350,
@@ -215,9 +190,9 @@ class PlantDetailPageContent extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            // Imagen de la planta
+           
             Image.network(plant.imgUrl, fit: BoxFit.cover),
-            // Degradado para mejorar contraste
+            
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -240,23 +215,23 @@ class PlantDetailPageContent extends StatelessWidget {
     switch (plant.status) {
       case PlantStatus.HEALTHY:
         statusColor = Colors.green;
-        statusText = 'Sana';
+        statusText = 'Healthy';
         break;
       case PlantStatus.WARNING:
         statusColor = Colors.orange;
-        statusText = 'Precaución';
+        statusText = 'Warning';
         break;
       case PlantStatus.DANGER:
         statusColor = Colors.red;
-        statusText = 'En peligro';
+        statusText = 'In danger';
         break;
       case PlantStatus.CRITICAL:
         statusColor = Colors.deepPurple;
-        statusText = 'Crítico';
+        statusText = 'Critical';
         break;
       case PlantStatus.UNKNOWN:
         statusColor = Colors.grey;
-        statusText = 'Desconocido';
+        statusText = 'Unknown';
         break;
     }
 
@@ -387,7 +362,7 @@ class PlantDetailPageContent extends StatelessWidget {
                 backgroundColor: color,
                 elevation: 0,
               ),
-              child: const Text('Marcar como regado'),
+              child: const Text('Mark as watered'),
             ),
           ],
         ],

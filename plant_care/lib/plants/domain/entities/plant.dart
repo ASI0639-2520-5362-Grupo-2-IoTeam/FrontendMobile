@@ -2,8 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:plant_care/plants/domain/entities/plant_metric.dart';
 import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
 
-// DDD: Esta es la Entidad pura. No sabe nada de JSON o APIs.
-// Es inmutable (final) y usa Equatable para comparaciones (buenas prácticas).
+
 class Plant extends Equatable {
   final int id;
   final String userId;
@@ -31,7 +30,7 @@ class Plant extends Equatable {
     required this.metrics,
   });
 
-  // Helper para obtener la métrica más reciente
+  
   PlantMetric? get latestMetric => metrics.isEmpty
       ? null
       : metrics.reduce((a, b) =>

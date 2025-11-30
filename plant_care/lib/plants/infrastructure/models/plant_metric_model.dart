@@ -1,14 +1,12 @@
 
-
-// DTO para las métricas anidadas
 import 'package:plant_care/plants/domain/entities/plant_metric.dart';
 
 class PlantMetricModel {
   final String deviceId;
-  final num temperature; // Usamos 'num' para flexibilidad (int o double)
-  final num humidity;
-  final num light;
-  final num soilHumidity;
+  final double temperature;
+  final double humidity;
+  final double light;
+  final double soilHumidity;
   final String createdAt;
 
   PlantMetricModel({
@@ -21,25 +19,34 @@ class PlantMetricModel {
   });
 
   factory PlantMetricModel.fromJson(Map<String, dynamic> json) {
+    double toDouble(dynamic v) {
+      if (v == null) return 0.0;
+      if (v is num) return v.toDouble();
+      if (v is String) return double.tryParse(v) ?? 0.0;
+      return 0.0;
+    }
+
     return PlantMetricModel(
-      deviceId: json['deviceId'],
-      temperature: json['temperature'],
-      humidity: json['humidity'],
-      light: json['light'],
-      soilHumidity: json['soilHumidity'],
-      createdAt: json['createdAt'],
+      deviceId: json['deviceId'] ?? json['device'] ?? '',
+      temperature: toDouble(json['airTemperatureC'] ?? json['temperature']),
+      humidity: toDouble(json['airHumidityPct'] ?? json['humidity']),
+      light: toDouble(json['lightIntensityLux'] ?? json['light']),
+      soilHumidity: toDouble(json['soilMoisturePct'] ?? json['soilHumidity']),
+      createdAt: (json['timestamp'] ?? json['createdAt'] ?? '').toString(),
     );
   }
 
-  // Conversión al de la Entidad de Dominio
+  
   PlantMetric toEntity() {
     return PlantMetric(
       deviceId: deviceId,
-      temperature: temperature.toDouble(), // Aseguramos el tipo
-      humidity: humidity.toDouble(),
-      light: light.toDouble(),
-      soilHumidity: soilHumidity.toDouble(),
-      createdAt: DateTime.parse(createdAt),
+      temperature: temperature,
+      humidity: humidity,
+      light: light,
+      soilHumidity: soilHumidity,
+      createdAt:
+          DateTime.tryParse(createdAt) ??
+          DateTime.fromMillisecondsSinceEpoch(0),
     );
   }
 }

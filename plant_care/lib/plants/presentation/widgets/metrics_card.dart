@@ -12,29 +12,33 @@ class MetricsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Formateo de fecha más limpio
     final lastUpdated = DateFormat('d MMM, hh:mm a').format(metric.createdAt);
 
     return Card(
-      elevation: 0, // Modern UI prefiere sombras sutiles o bordes
+      elevation: 0, 
       color: colorScheme.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24), // Bordes más redondeados (Moderno)
+        borderRadius: BorderRadius.circular(
+          24,
+        ), 
         side: BorderSide(color: colorScheme.outlineVariant.withOpacity(0.3)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // --- HEADER: Dispositivo y Fecha ---
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _DeviceBadge(deviceId: metric.deviceId),
                 Row(
                   children: [
-                    Icon(Icons.access_time_rounded, 
-                         size: 14, color: theme.hintColor),
+                    Icon(
+                      Icons.access_time_rounded,
+                      size: 14,
+                      color: theme.hintColor,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       lastUpdated,
@@ -48,27 +52,28 @@ class MetricsCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            
-            // --- GRID DE MÉTRICAS (Bento Style) ---
+
             Row(
               children: [
                 Expanded(
                   child: _MetricTile(
-                    label: 'Temperatura',
+                    label: 'Temperature',
                     value: metric.temperature.toStringAsFixed(1),
                     unit: '°C',
                     icon: Icons.thermostat_rounded,
-                    accentColor: const Color(0xFFFF6B6B), // Naranja/Rojo suave
+                    accentColor: const Color(0xFFFF6B6B), 
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _MetricTile(
-                    label: 'Humedad',
-                    value: metric.humidity.toStringAsFixed(0), // Sin decimales suele ser mejor
+                    label: 'Humidity',
+                    value: metric.humidity.toStringAsFixed(
+                      0,
+                    ), 
                     unit: '%',
                     icon: Icons.water_drop_rounded,
-                    accentColor: const Color(0xFF4ECDC4), // Turquesa
+                    accentColor: const Color(0xFF4ECDC4), 
                   ),
                 ),
               ],
@@ -78,21 +83,21 @@ class MetricsCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _MetricTile(
-                    label: 'Luz',
+                    label: 'Light',
                     value: metric.light.toStringAsFixed(0),
                     unit: 'lx',
                     icon: Icons.wb_sunny_rounded,
-                    accentColor: const Color(0xFFFFD93D), // Amarillo Sol
+                    accentColor: const Color(0xFFFFD93D), 
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _MetricTile(
-                    label: 'Suelo',
+                    label: 'Soil',
                     value: metric.soilHumidity.toStringAsFixed(0),
                     unit: '%',
                     icon: Icons.grass_rounded,
-                    accentColor: const Color(0xFF6A994E), // Verde Planta
+                    accentColor: const Color(0xFF6A994E), 
                   ),
                 ),
               ],
@@ -104,7 +109,6 @@ class MetricsCard extends StatelessWidget {
   }
 }
 
-// --- WIDGETS INTERNOS (DRY & SRP) ---
 
 class _DeviceBadge extends StatelessWidget {
   final String deviceId;
@@ -127,13 +131,21 @@ class _DeviceBadge extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(width: 6),
-          Text(
-            deviceId,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
+          
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.35,
+            ),
+            child: Text(
+              deviceId,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -159,58 +171,63 @@ class _MetricTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        // Un fondo muy sutil basado en el color del acento da un look "Glassy"
         color: accentColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Icono con círculo de fondo
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: accentColor.withOpacity(0.2),
+              color: accentColor.withOpacity(0.16),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: accentColor, size: 20),
           ),
-          const SizedBox(height: 12),
-          
-          // Valor Numérico Grande
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: value,
-                  style: theme.textTheme.headlineMedium?.copyWith(
+          const SizedBox(height: 10),
+
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
-                    height: 1.0,
                   ),
                 ),
-                TextSpan(
-                  text: unit,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
-                  ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                unit,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          
-          // Etiqueta descriptiva
+          const SizedBox(height: 8),
+
           Text(
-            label,
+            label.toUpperCase(),
+            textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.outline,
               fontWeight: FontWeight.w600,
+              fontSize: 11,
+              letterSpacing: 0.6,
             ),
           ),
         ],

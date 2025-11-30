@@ -1,11 +1,3 @@
-
-
-
-
-
-// DDD: Este es el DTO (Data Transfer Object) o "Model".
-// Sabe cómo parsear JSON (fromJson) y cómo convertirse en una Entidad de dominio (toEntity).
-// Esto desacopla totalmente el Dominio (Plant) de la Infraestructura (el JSON del API).
 import 'package:plant_care/plants/domain/entities/plant.dart';
 import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
 import 'package:plant_care/plants/infrastructure/models/plant_metric_model.dart';
@@ -18,11 +10,11 @@ class PlantModel {
   final String imgUrl;
   final String bio;
   final String location;
-  final String status; // Como String, desde el JSON
+  final String status; 
   final String lastWatered;
   final String nextWatering;
   final List<PlantMetricModel> metrics;
-  // Omitimos wateringLogs, createdAt, updatedAt según tu solicitud.
+
 
   PlantModel({
     required this.id,
@@ -38,27 +30,42 @@ class PlantModel {
     required this.metrics,
   });
 
-  // Factory Pattern: Un método "constructor" para crear desde JSON.
+  
   factory PlantModel.fromJson(Map<String, dynamic> json) {
+    int toInt(dynamic v) {
+      if (v == null) return 0;
+      if (v is int) return v;
+      return int.tryParse(v.toString()) ?? 0;
+    }
+
+    final metricsJson = json['metrics'];
+    final metricsList = (metricsJson is List)
+        ? metricsJson
+              .map(
+                (metricJson) => PlantMetricModel.fromJson(
+                  metricJson as Map<String, dynamic>,
+                ),
+              )
+              .toList()
+        : <PlantMetricModel>[];
+
     return PlantModel(
-      id: json['id'],
-      userId: json['userId'],
-      name: json['name'],
-      type: json['type'],
-      imgUrl: json['imgUrl'],
-      bio: json['bio'],
-      location: json['location'],
-      status: json['status'],
-      lastWatered: json['lastWatered'],
-      nextWatering: json['nextWatering'],
-      metrics: (json['metrics'] as List)
-          .map((metricJson) => PlantMetricModel.fromJson(metricJson))
-          .toList(),
+      id: toInt(json['id']),
+      userId: (json['userId'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      type: (json['type'] ?? '').toString(),
+      imgUrl: (json['imgUrl'] ?? '').toString(),
+      bio: (json['bio'] ?? '').toString(),
+      location: (json['location'] ?? '').toString(),
+      status: (json['status'] ?? '').toString(),
+      lastWatered: (json['lastWatered'] ?? json['last_watered'] ?? '')
+          .toString(),
+      nextWatering: (json['nextWatering'] ?? json['next_watering'] ?? '')
+          .toString(),
+      metrics: metricsList,
     );
   }
 
-  // Método de conversión a la Entidad del Dominio.
-  // Aquí ocurre la "magia" de la transformación de datos.
   Plant toEntity() {
     return Plant(
       id: id,
@@ -68,12 +75,16 @@ class PlantModel {
       imgUrl: imgUrl,
       bio: bio,
       location: location,
-      status: PlantStatus.fromString(status), // Conversión de Value Object
-      lastWatered: DateTime.parse(lastWatered), // Conversión de tipo
-      nextWatering: DateTime.parse(nextWatering),
+      status: PlantStatus.fromString(status), 
+      lastWatered:
+          DateTime.tryParse(lastWatered) ??
+          DateTime.fromMillisecondsSinceEpoch(0), 
+      nextWatering:
+          DateTime.tryParse(nextWatering) ??
+          DateTime.fromMillisecondsSinceEpoch(0),
       metrics: metrics
           .map((model) => model.toEntity())
-          .toList(), // Conversión recursiva
+          .toList(), 
     );
   }
 }

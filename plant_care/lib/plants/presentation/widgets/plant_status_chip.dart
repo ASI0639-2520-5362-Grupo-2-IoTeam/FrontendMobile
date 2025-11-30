@@ -45,15 +45,15 @@ class PlantStatusChip extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     switch (status) {
       case PlantStatus.HEALTHY:
-        return ('Saludable', colors.primary, Icons.check_circle);
+        return ('Healthy', colors.primary, Icons.check_circle);
       case PlantStatus.WARNING:
-        return ('Atención', Colors.orange.shade700, Icons.warning);
+        return ('Warning', Colors.orange.shade700, Icons.warning);
       case PlantStatus.CRITICAL:
-        return ('Crítico', colors.error, Icons.dangerous);
+        return ('Critical', colors.error, Icons.dangerous);
       case PlantStatus.DANGER:
-        return ('Peligro', colors.error, Icons.dangerous);
+        return ('Danger', colors.error, Icons.dangerous);
       case PlantStatus.UNKNOWN:
-        return ('Desconocido', Colors.grey, Icons.help);
+        return ('Unknown', Colors.grey, Icons.help);
     }
   }
 }
