@@ -9,6 +9,8 @@ import 'package:plant_care/iam/presentation/pages/login_page.dart';
 import 'package:plant_care/iam/presentation/pages/register_page.dart';
 
 import 'package:plant_care/shared/presentation/views/splash_view.dart';
+import 'package:plant_care/community/presentation/screens/join_community_screen.dart';
+import 'package:plant_care/community/presentation/screens/community_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -60,6 +62,16 @@ final GoRouter appRouter = GoRouter(
       path: '/subscription',
       name: 'subscription',
       builder: (context, state) => const SubscriptionView(),
+    ),
+    GoRoute(
+      path: '/community',
+      name: 'community_join',
+      builder: (context, state) => const JoinCommunityScreen(),
+    ),
+    GoRoute(
+      path: '/community/feed',
+      name: 'community_feed',
+      builder: (context, state) => const CommunityScreen(),
     ),
   ],
 );

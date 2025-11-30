@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plant_care/community/infrastructure/repositories/http_community_repository.dart';
+import 'package:plant_care/community/presentation/providers/community_provider.dart';
 import 'package:plant_care/iam/application/usecases/google_signin_usecase.dart';
 import 'package:plant_care/shared/presentation/navigation/app_router.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +52,12 @@ void main() async {
           ),
         ),
         ChangeNotifierProvider(create: (_) => PlantProvider()),
+        ChangeNotifierProvider(
+          create: (context) => CommunityProvider(
+            repository: HttpCommunityRepository(),
+            authProvider: Provider.of<AuthProvider>(context, listen: false),
+          ),
+        ),
       ],
       child: const PlantCareApp(),
     ),

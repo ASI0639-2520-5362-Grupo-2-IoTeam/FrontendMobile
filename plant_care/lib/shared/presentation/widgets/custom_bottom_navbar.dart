@@ -35,7 +35,7 @@ class CustomBottomNavBar extends StatelessWidget {
             context.go("/myplants");
             break;
           case 2:
-            context.go("/history");
+            context.go("/community");
             break;
           case 3:
             context.go("/settings");
@@ -52,8 +52,8 @@ class CustomBottomNavBar extends StatelessWidget {
           label: "My Plants",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.history),
-          label: "History",
+          icon: Icon(Icons.groups),
+          label: "Community",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),
