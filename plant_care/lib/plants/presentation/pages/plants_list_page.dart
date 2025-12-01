@@ -5,6 +5,7 @@ import 'package:plant_care/plants/domain/entities/plant.dart';
 import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
 import 'package:plant_care/plants/presentation/cubit/plants_cubit.dart';
 import 'package:plant_care/plants/presentation/pages/plant_detail_page.dart';
+import 'package:plant_care/plants/presentation/pages/add_plant_page.dart';
 
 class PlantsListPage extends StatelessWidget {
   const PlantsListPage({super.key});
@@ -48,6 +49,15 @@ class PlantsListPage extends StatelessWidget {
                   icon: Icons.add_rounded,
                   onPressed: () {
                     HapticFeedback.lightImpact();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<PlantsCubit>(),
+                          child: const AddPlantPage(),
+                        ),
+                      ),
+                    );
                   },
                   isPrimary: true,
                 ),
@@ -137,9 +147,7 @@ class _ModernIconButton extends StatelessWidget {
         icon: Icon(
           icon,
           size: 22,
-          color: isPrimary
-              ? Colors.white
-              : theme.colorScheme.onSurfaceVariant,
+          color: isPrimary ? Colors.white : theme.colorScheme.onSurfaceVariant,
         ),
         onPressed: onPressed,
       ),
@@ -177,13 +185,10 @@ class _PlantsSliverGrid extends StatelessWidget {
           crossAxisSpacing: spacing,
           childAspectRatio: childAspectRatio,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final plant = plants[index];
-            return _ModernPlantCard(plant: plant);
-          },
-          childCount: plants.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final plant = plants[index];
+          return _ModernPlantCard(plant: plant);
+        }, childCount: plants.length),
       ),
     );
   }
@@ -203,7 +208,12 @@ class _ModernPlantCard extends StatelessWidget {
         HapticFeedback.selectionClick();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => PlantDetailPage(plant: plant)),
+          MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+              value: context.read<PlantsCubit>(),
+              child: PlantDetailPage(plant: plant),
+            ),
+          ),
         );
       },
       child: Container(
@@ -389,10 +399,7 @@ class _ModernStatusBadge extends StatelessWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-          width: 1.5,
-        ),
+        border: Border.all(color: color.withOpacity(0.2), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -410,11 +417,7 @@ class _ModernStatusBadge extends StatelessWidget {
               color: color.withOpacity(0.15),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              size: 10,
-              color: color,
-            ),
+            child: Icon(icon, size: 10, color: color),
           ),
           const SizedBox(width: 6),
           Text(
@@ -552,6 +555,15 @@ class _EmptyState extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () {
                 HapticFeedback.lightImpact();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<PlantsCubit>(),
+                      child: const AddPlantPage(),
+                    ),
+                  ),
+                );
               },
               icon: const Icon(Icons.add_rounded),
               label: const Text('Add Plant'),

@@ -4,6 +4,8 @@ import 'package:plant_care/plants/presentation/cubit/plants_cubit.dart';
 import 'package:plant_care/plants/infrastructure/datasources/plant_remote_datasource.dart';
 import 'package:plant_care/plants/infrastructure/repositories/plant_repository_impl.dart';
 import 'package:plant_care/plants/application/usecases/get_plants.dart';
+import 'package:plant_care/plants/application/usecases/add_plant.dart';
+import 'package:plant_care/plants/application/usecases/delete_plant.dart';
 
 // Provider helper que crea y configura las dependencias necesarias
 // para obtener plantas desde el backend. Devuelve un PlantsCubit listo
@@ -21,6 +23,14 @@ class PlantProvider extends ChangeNotifier {
     final remote = PlantRemoteDataSourceImpl(client: client);
     final repo = PlantRepositoryImpl(remoteDataSource: remote);
     final getPlants = GetPlants(repo);
-    return PlantsCubit(getPlants: getPlants, userId: userId, token: token);
+    final addPlant = AddPlant(repo);
+    final deletePlant = DeletePlant(repo);
+    return PlantsCubit(
+      getPlants: getPlants,
+      addPlant: addPlant,
+      deletePlant: deletePlant,
+      userId: userId,
+      token: token,
+    );
   }
 }

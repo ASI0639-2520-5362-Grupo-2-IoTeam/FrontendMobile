@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant_care/plants/domain/entities/plant.dart';
 import 'package:plant_care/plants/domain/value_objetcs/plant_status.dart';
 import 'package:plant_care/plants/presentation/widgets/metrics_card.dart';
+import 'package:plant_care/plants/presentation/cubit/plants_cubit.dart';
 
 class PlantDetailPage extends StatelessWidget {
   final Plant plant;
@@ -22,9 +24,62 @@ class PlantDetailPage extends StatelessWidget {
   }
 }
 
-class PlantDetailPageContent extends StatelessWidget {
+class PlantDetailPageContent extends StatefulWidget {
   final Plant plant;
   const PlantDetailPageContent({super.key, required this.plant});
+
+  @override
+  State<PlantDetailPageContent> createState() => _PlantDetailPageContentState();
+}
+
+class _PlantDetailPageContentState extends State<PlantDetailPageContent> {
+  void _showDeleteConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Plant'),
+          content: Text(
+            'Are you sure you want to delete "${widget.plant.name}"? This action cannot be undone.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                _deletePlant();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deletePlant() async {
+    try {
+      await context.read<PlantsCubit>().removePlant(widget.plant.id.toString());
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Plant deleted successfully')),
+        );
+        Navigator.of(context).pop(); // Go back to list
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete plant: $e')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +105,7 @@ class PlantDetailPageContent extends StatelessWidget {
                 children: [
                   // Título con animación
                   Text(
-                    plant.name,
+                    widget.plant.name,
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.5,
@@ -79,7 +134,7 @@ class PlantDetailPageContent extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      plant.type.toUpperCase(),
+                      widget.plant.type.toUpperCase(),
                       style: theme.textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: theme.colorScheme.primary,
@@ -101,7 +156,7 @@ class PlantDetailPageContent extends StatelessWidget {
                   const SizedBox(height: 12),
                   _ModernContentCard(
                     child: Text(
-                      plant.bio,
+                      widget.plant.bio,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         height: 1.6,
                         fontSize: 15,
@@ -122,7 +177,7 @@ class PlantDetailPageContent extends StatelessWidget {
                       Expanded(
                         child: _WateringTile(
                           label: 'Last watering',
-                          date: plant.lastWatered,
+                          date: widget.plant.lastWatered,
                           icon: Icons.water_drop_rounded,
                           color: const Color(0xFF007AFF),
                         ),
@@ -131,7 +186,7 @@ class PlantDetailPageContent extends StatelessWidget {
                       Expanded(
                         child: _WateringTile(
                           label: 'Next watering',
-                          date: plant.nextWatering,
+                          date: widget.plant.nextWatering,
                           icon: Icons.access_alarm_rounded,
                           color: const Color(0xFFFF9500),
                           isNext: true,
@@ -147,8 +202,8 @@ class PlantDetailPageContent extends StatelessWidget {
                     icon: Icons.sensors,
                   ),
                   const SizedBox(height: 12),
-                  if (plant.latestMetric != null)
-                    MetricsCard(metric: plant.latestMetric!)
+                  if (widget.plant.latestMetric != null)
+                    MetricsCard(metric: widget.plant.latestMetric!)
                   else
                     _ModernContentCard(
                       child: Center(
@@ -193,14 +248,35 @@ class PlantDetailPageContent extends StatelessWidget {
       actions: [
         _GlassButton(
           icon: Icons.more_horiz,
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.delete, color: Colors.red),
+                        title: const Text('Delete Plant'),
+                        onTap: () {
+                          Navigator.of(context).pop(); // Close bottom sheet
+                          _showDeleteConfirmation();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(plant.imgUrl, fit: BoxFit.cover),
+            Image.network(widget.plant.imgUrl, fit: BoxFit.cover),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -227,7 +303,7 @@ class PlantDetailPageContent extends StatelessWidget {
     String statusText;
     IconData statusIcon;
 
-    switch (plant.status) {
+    switch (widget.plant.status) {
       case PlantStatus.HEALTHY:
         statusColor = const Color(0xFF34C759);
         statusText = 'Healthy';
@@ -290,11 +366,7 @@ class PlantDetailPageContent extends StatelessWidget {
                     color: statusColor.withOpacity(0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    statusIcon,
-                    size: 14,
-                    color: statusColor,
-                  ),
+                  child: Icon(statusIcon, size: 14, color: statusColor),
                 ),
                 const SizedBox(width: 10),
                 Flexible(
@@ -337,7 +409,7 @@ class PlantDetailPageContent extends StatelessWidget {
                 const SizedBox(width: 8),
                 Flexible(
                   child: Text(
-                    plant.location,
+                    widget.plant.location,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
@@ -360,10 +432,7 @@ class _GlassButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
-  const _GlassButton({
-    required this.icon,
-    required this.onPressed,
-  });
+  const _GlassButton({required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -407,10 +476,7 @@ class _ModernSectionTitle extends StatelessWidget {
   final String title;
   final IconData icon;
 
-  const _ModernSectionTitle({
-    required this.title,
-    required this.icon,
-  });
+  const _ModernSectionTitle({required this.title, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -429,11 +495,7 @@ class _ModernSectionTitle extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: theme.colorScheme.primary,
-          ),
+          child: Icon(icon, size: 18, color: theme.colorScheme.primary),
         ),
         const SizedBox(width: 12),
         Text(
@@ -507,16 +569,10 @@ class _WateringTile extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            color.withOpacity(0.12),
-            color.withOpacity(0.06),
-          ],
+          colors: [color.withOpacity(0.12), color.withOpacity(0.06)],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: color.withOpacity(0.25),
-          width: 1.5,
-        ),
+        border: Border.all(color: color.withOpacity(0.25), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: color.withOpacity(0.08),
@@ -533,10 +589,7 @@ class _WateringTile extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  color.withOpacity(0.25),
-                  color.withOpacity(0.15),
-                ],
+                colors: [color.withOpacity(0.25), color.withOpacity(0.15)],
               ),
               shape: BoxShape.circle,
             ),
