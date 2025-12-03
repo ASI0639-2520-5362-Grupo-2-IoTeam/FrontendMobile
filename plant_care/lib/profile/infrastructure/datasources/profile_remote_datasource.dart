@@ -18,7 +18,7 @@ abstract class ProfileRemoteDataSource {
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   ProfileRemoteDataSourceImpl({
     required this.client,
-    this.baseUrl = 'http://localhost:8090/api/v1',
+    this.baseUrl = 'https://plantcare-awcchhb2bfg3hxgf.canadacentral-01.azurewebsites.net/api/v1',
   });
 
   final http.Client client;

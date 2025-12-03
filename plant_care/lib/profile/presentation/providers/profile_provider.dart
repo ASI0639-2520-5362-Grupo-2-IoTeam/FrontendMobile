@@ -14,6 +14,9 @@ import '../../infrastructure/datasources/profile_remote_datasource.dart';
 import '../../infrastructure/repositories/profile_repository_impl.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  static const String _prodBaseUrl =
+      'https://plantcare-awcchhb2bfg3hxgf.canadacentral-01.azurewebsites.net/api/v1';
+
   ProfileProvider({
     required GetProfile getProfile,
     required UpdateProfile updateProfile,
@@ -144,11 +147,8 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   static String _defaultBaseUrl() {
-    if (kIsWeb) return 'http://localhost:8090/api/v1';
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      // Android emulator loopback.
-      return 'http://10.0.2.2:8090/api/v1';
-    }
-    return 'http://localhost:8090/api/v1';
+    if (kIsWeb) return _prodBaseUrl;
+    if (defaultTargetPlatform == TargetPlatform.android) return _prodBaseUrl;
+    return _prodBaseUrl;
   }
 }
