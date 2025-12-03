@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:plant_care/analytics/data/models/analytics_data_model.dart';
-import 'package:plant_care/analytics/data/models/report_model.dart';
-import 'package:plant_care/analytics/data/models/sensor_data_model.dart';
+import 'package:plant_care/analytics/infrastructure/models/analytics_data_model.dart';
+import 'package:plant_care/analytics/infrastructure/models/report_model.dart';
+import 'package:plant_care/analytics/infrastructure/models/sensor_data_model.dart';
 
 /// Service responsible for communicating with the Analytics API.
 class AnalyticsApiService {

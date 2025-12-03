@@ -1,5 +1,5 @@
 import 'package:plant_care/analytics/domain/entities/analytics_data.dart';
-import 'package:plant_care/analytics/data/models/watering_trend_model.dart';
+import 'package:plant_care/analytics/infrastructure/models/watering_trend_model.dart';
 
 class AnalyticsDataModel extends AnalyticsData {
   AnalyticsDataModel({

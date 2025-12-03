@@ -1,5 +1,5 @@
-import 'package:plant_care/analytics/data/datasources/analytics_api_service.dart';
-import 'package:plant_care/analytics/data/models/report_model.dart';
+import 'package:plant_care/analytics/infrastructure/datasources/analytics_api_service.dart';
+import 'package:plant_care/analytics/infrastructure/models/report_model.dart';
 import 'package:plant_care/analytics/domain/entities/analytics_data.dart';
 import 'package:plant_care/analytics/domain/entities/report.dart';
 import 'package:plant_care/analytics/domain/entities/sensor_data.dart';
