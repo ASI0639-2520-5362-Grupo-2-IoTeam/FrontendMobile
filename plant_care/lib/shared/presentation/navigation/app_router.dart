@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../dashboard/presentation/widgets/dashboard_view.dart';
 import '../../../plants/presentation/plant_detail_view.dart';
+import '../../../analytics/presentation/pages/analytics_view.dart';
 import '../widgets/custom_bottom_navbar.dart';
 import '../views/settings_view.dart';
 import '../views/search_filter_view.dart';
@@ -59,6 +60,14 @@ final GoRouter appRouter = GoRouter(
       name: 'community_feed',
       builder: (context, state) =>
           const CommunityScreen(), 
+    ),
+    GoRoute(
+      path: '/analytics',
+      name: 'analytics',
+      builder: (context, state) => Scaffold(
+        body: const AnalyticsView(),
+        bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
+      ),
     ),
     GoRoute(
       path: '/settings',

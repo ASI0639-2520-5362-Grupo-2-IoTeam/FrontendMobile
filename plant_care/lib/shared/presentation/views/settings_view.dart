@@ -171,7 +171,7 @@ class _SettingsViewState extends State<SettingsView> {
       ),
 
       // Barra inferior
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
+      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 4),
     );
   }
 }
